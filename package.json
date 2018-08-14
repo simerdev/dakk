@@ -1,0 +1,33 @@
+{
+  "name": "blog",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon stater.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "boom": "^7.2.0",
+    "config": "^2.0.1",
+    "handlebars": "^4.0.11",
+    "hapi": "^17.5.2",
+    "hapi-auth-basic": "^5.0.0",
+    "hapi-auth-cookie": "^9.0.0",
+    "hapi-geo-locate": "^3.0.1",
+    "hapi-router": "^4.0.0",
+    "hapi-swagger": "^9.1.1",
+    "inert": "^5.1.0",
+    "joi": "^13.5.2",
+    "mysql2": "^1.6.1",
+    "sequelize": "^4.38.0",
+    "vision": "^5.3.3"
+  },
+  "devDependencies": {
+    "babel-preset-env": "^1.7.0",
+    "babel-register": "^6.26.0",
+    "nodemon": "^1.18.3"
+  }
+}
