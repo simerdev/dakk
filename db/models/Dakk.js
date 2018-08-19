@@ -1,27 +1,14 @@
-module.exports = function(sequelize, DataTypes) {
-  const Dakk = sequelize.define('Dakk', {
-    id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      primaryKey: true,
-      autoIncrement: true
-    },
-    status: {
-      type: DataTypes.STRING
-    },
-    uploadBy: {
-      type: DataTypes.STRING
-    },
-    type: {
-      type: DataTypes.STRING
-    },
-    filePath:{
-      type: DataTypes.STRING
-    }
-  }, {
-    timestamps: true,
-    tableName: 'dakk'
-  });
-
+'use strict';
+module.exports = (sequelize, DataTypes) => {
+  var Dakk = sequelize.define('Dakk', {
+    name: DataTypes.STRING,
+    type: DataTypes.STRING,
+    filePath: DataTypes.STRING,
+    status: DataTypes.STRING,
+    uploadBy: DataTypes.STRING
+  }, {});
+  Dakk.associate = function(models) {
+    // associations can be defined here
+  };
   return Dakk;
-}
+};

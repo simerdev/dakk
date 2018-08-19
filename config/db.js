@@ -1,7 +1,7 @@
 module.exports = {
   development: {
-    username: 'root',
-    password: 'admin',
+    username: 'admin',
+    password: 'root',
     database: 'Dakk',
     host: 'localhost',
     dialect: 'mysql',
@@ -12,8 +12,6 @@ module.exports = {
       acquire: 300000,
       idleTimeoutMillis: 300000,
       idle: 10000
-    },
-    migrationStorage: 'json',
-    migrationStoragePath: 'sequelizeMigrationsMeta.json'
+    }
   }
 };
