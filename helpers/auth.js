@@ -4,16 +4,12 @@ const USERNAME = 'admin';
 const PASSWORD = '12345';
 
 async function register (server, options) {  
-  // register dependency to hapi-auth-basic
+  // register dependency to hapi-auth-coolie
   // and make sure it’s available to this plugin
   await server.register({
     plugin: require('hapi-auth-cookie')
   })
 
-  /*
-    Baisc authendication using basic scheme. Basic scheme is auto used when
-    we use simple startegy.
-  */
   server.auth.strategy('session', 'cookie', {
     password: 'thisistestingpassword',
     cookie: 'sid',
@@ -32,40 +28,32 @@ async function register (server, options) {
       return out;
     }
   });
-
-  server.auth.default('session');
 }
 
 /* 
   Authendication using hapi auth basic plugin
 */
-async function register (server, options) {  
-  // register dependency to hapi-auth-basic
-  // and make sure it’s available to this plugin
-  await server.register({
-    plugin: require('hapi-auth-basic')
-  })
+// async function register (server, options) {  
+//   await server.register({
+//     plugin: require('hapi-auth-basic')
+//   })
 
-  /*
-    Baisc authendication using basic scheme. Basic scheme is auto used when
-    we use simple startegy.
-  */
-  server.auth.strategy('simple', 'basic', {
-    validate: async (request, username, password,  h) => {
-      if (username !== USERNAME) {
-        h.unauthenticated(Boom.unauthorized('Username is not correct'));
-      }
+//   server.auth.strategy('simple', 'basic', {
+//     validate: async (request, username, password,  h) => {
+//       if (username !== USERNAME) {
+//         h.unauthenticated(Boom.unauthorized('Username is not correct'));
+//       }
 
-      if (username === USERNAME && password !== PASSWORD) {
-        return Boom.unauthorized('Password is incorrect for this username');
-      }
+//       if (username === USERNAME && password !== PASSWORD) {
+//         return Boom.unauthorized('Password is incorrect for this username');
+//       }
 
-      const isValid = username === USERNAME && password === PASSWORD;
+//       const isValid = username === USERNAME && password === PASSWORD;
 
-      return { isValid, credentials: { id: '1', username: 'Ham Hai Admin' }};
-    }
-  });
-}
+//       return { isValid, credentials: { id: '1', username: 'Ham Hai Admin' }};
+//     }
+//   });
+// }
 
 exports.plugin = {  
   register,

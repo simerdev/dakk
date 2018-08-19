@@ -4,8 +4,6 @@ import db from '../../db';
 const { Dakk } = db.models;
 
 module.exports = {
-  auth: 'simple',
-  
   tags: ['api', 'dakk'],
 
   description: 'Get All Dakks',

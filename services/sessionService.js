@@ -5,7 +5,7 @@ const { User } = db.models;
 exports.authenticate = async (userData) => {
   const res = await User.findOne({
     where: {
-      userName: userData.email
+      userName: userData.username
     }
   });
 

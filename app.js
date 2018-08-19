@@ -116,6 +116,8 @@ const init = async () => {
 
   await healthCheck();
 
+  // server.auth.default('session');
+
   await server.start();
 
   console.log(`Server running at: ${server.info.uri}`);

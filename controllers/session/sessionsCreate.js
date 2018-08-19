@@ -7,7 +7,7 @@ module.exports = {
     'hapi-swagger': {
       payloadType: 'form'
     }
-  },
+  }, 
 
   tags: ['api', 'session'],
 
@@ -17,7 +17,7 @@ module.exports = {
 
   validate: {
     payload: {
-      email: joi
+      username: joi
         .string()
         .max(250)
         .required()
@@ -29,7 +29,9 @@ module.exports = {
 
   handler: (request, h) => {
     const payload = request.payload;
-    // console.log('request.server.app', request.server.state);
+    console.log(request);
+    console.log(payload);
+
     const onError = (err) => {
       request.server.log(['error'], err);
       console.log(err);
@@ -52,8 +54,13 @@ module.exports = {
         delete user.Password;
 
         const sid = String(user.id);
-        request.server.states.format(sid, { user });
+
+        console.log(request);
+
+        request.server.app.cache.set(sid, { user }, 0);
         request.cookieAuth.set({ sid });
+        // request.server.states.format(sid, { user });
+        // request.cookieAuth.set({ sid });
         return h.response({ statusCode: 200, success: true, data: user });
       })
       .catch(onError);
