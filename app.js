@@ -2,6 +2,7 @@
 import Hapi from 'hapi';
 import Boom from 'boom';
 import { appHelper }  from './helpers';
+import { JWT_KEY } from './constants';
 
 const server = Hapi.server({
   port: 3000,
@@ -12,60 +13,16 @@ const context = {
   title: 'My personal site'
 };
 
-server.state('data', {
-  ttl: null,
-  isSecure: false,
-  isHttpOnly: true,
-  clearInvalid: false,
-  strictHeader: true
-});
-
-server.route({
-  method: 'GET',
-  path: '/',
-  handler: (request, h) => {
-    const headers = request.headers;
-    const response = h.response(request.location);
-    response.type('application/json')
-    response.header('my-value', 'XXXX');
-    h.state('data', 'test', { encoding: 'none' });
-    return h.response('Hello');
-
-    return response;
-  },
-  options: {
-    cache: {
-        expiresIn: 30 * 1000,
-        privacy: 'private'
-    }
-  }
-});
-
-server.route({
-  method: 'GET',
-  path: '/{name}',
-  handler: (request, h) => {
-      return 'Hello, ' + encodeURIComponent(request.params.name) + ' ' + request.query.name + ' !';
-  }
-});
-
-server.route({
-  method: 'GET',
-  path: '/json',
-  handler: (request, h) => {
-    const data = {
-      id: 223,
-      name: 'Harsimran'
-    };
-
-    const value = request.state;
-    console.log('cokkie value', value);
-    return h.response(data).code(400);
-  }
-});
-
 const healthCheck = async () => {
   await appHelper.checkDbConnection();
+};
+
+const validate = function (credentials) {
+  // Run any checks here to confirm we want to grant these credentials access
+  return {
+    isValid: true,
+    credentials // request.auth.credentials
+  }
 };
 
 const init = async () => {
@@ -95,6 +52,12 @@ const init = async () => {
     }
   ]);
 
+  server.auth.strategy('jwt', 'jwt', {
+    key: JWT_KEY,
+    validate,
+    verifyOptions: { algorithms: [ 'HS256' ] }
+  });
+
   server.views({
     engines: {
       html: require('handlebars')
@@ -115,8 +78,6 @@ const init = async () => {
   });
 
   await healthCheck();
-
-  // server.auth.default('session');
 
   await server.start();
 

@@ -1,6 +1,9 @@
+import { JWT_KEY } from '../../constants';
+
 const joi = require('joi');
 const sessionService = require('../../services/sessionService');
 const boom = require('boom');
+const jwt = require('jsonwebtoken');
 
 module.exports = {
   plugins: {
@@ -29,9 +32,7 @@ module.exports = {
 
   handler: (request, h) => {
     const payload = request.payload;
-    console.log(request);
-    console.log(payload);
-
+    
     const onError = (err) => {
       request.server.log(['error'], err);
       console.log(err);
@@ -44,24 +45,22 @@ module.exports = {
         // check if user exists
         if (!user) {
           return boom.badRequest('User does not exists');
-        }
+        };
 
         // compare pwd
         if (payload.password !== user.password) {
           return boom.badRequest('Invalid Password');
         }
 
-        delete user.Password;
+        const credentials = {
+          userName: user.username,
+          password: user.password
+        };
 
-        const sid = String(user.id);
+        const token = jwt.sign(credentials, JWT_KEY, { algorithm: 'HS256', expiresIn: '1h' })
 
-        console.log(request);
-
-        request.server.app.cache.set(sid, { user }, 0);
-        request.cookieAuth.set({ sid });
-        // request.server.states.format(sid, { user });
-        // request.cookieAuth.set({ sid });
-        return h.response({ statusCode: 200, success: true, data: user });
+        return { token };
+       //  return h.response({ statusCode: 200, success: true, data: user });
       })
       .catch(onError);
   }
