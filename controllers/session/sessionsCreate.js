@@ -44,7 +44,7 @@ module.exports = {
       .then(user => {
         // check if user exists
         if (!user) {
-          return boom.badRequest('User does not exists');
+          return boom.unauthorized('User does not exists');
         };
 
         // compare pwd
@@ -57,10 +57,9 @@ module.exports = {
           password: user.password
         };
 
-        const token = jwt.sign(credentials, JWT_KEY, { algorithm: 'HS256', expiresIn: '1h' })
+        const token = jwt.sign(credentials, JWT_KEY, { algorithm: 'HS256', expiresIn: '1h' });
 
         return { token };
-       //  return h.response({ statusCode: 200, success: true, data: user });
       })
       .catch(onError);
   }
