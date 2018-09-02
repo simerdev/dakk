@@ -10,14 +10,17 @@ module.exports = {
 
   notes: 'get details of all dakks',
 
-  handler: (request, h) => {
-    return Dakk.findAll()
-    .then(users => {
-      return h.response(users);
-    })
-    .catch(e => { 
+  handler: async (request, h) => {
+    try {
+      const dakks = await Dakk
+      .findAll({
+        attributes: ['name', 'status']
+      });
+
+      return h.response(dakks);
+    } catch (e) {
+      console.log(e);
       Boom.badRequest('invalid query');
-      console.log(e)
-    });
+    }
   }
 };
