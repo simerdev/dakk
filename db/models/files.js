@@ -7,6 +7,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   Files.associate = function(models) {
     // associations can be defined here
+    Files.belongsTo(models.dakk, { foreignKey: 'dakkId' });
   };
   return Files;
 };

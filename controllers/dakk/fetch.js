@@ -1,7 +1,9 @@
 import joi from 'joi';
 import Boom from 'boom';
 import db from '../../db';
-const { Dakk } = db.models;
+const { Dakk, Files } = db.models;
+Dakk.hasMany(Files, {foreignKey: 'id'});
+Files.belongsTo(Dakk, { foreignKey: 'dakkId' });
 
 module.exports = {
   tags: ['api', 'dakk'],
@@ -14,7 +16,10 @@ module.exports = {
     try {
       const dakks = await Dakk
       .findAll({
-        attributes: ['name', 'status']
+        attributes: ['name', 'status'],
+        include: [
+          Files
+        ]
       });
 
       return h.response(dakks);

@@ -14,9 +14,6 @@ module.exports = {
       type: {
         type: Sequelize.STRING
       },
-      filePath: {
-        type: Sequelize.STRING
-      },
       status: {
         type: Sequelize.STRING
       },
