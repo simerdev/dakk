@@ -2,7 +2,9 @@ import joi from 'joi';
 import { uploadImages } from '../../helpers/processFiles';
 import Boom from 'boom';
 import db from '../../db';
-const { Dakk, Files } = db.models;
+import { IMAGES_FOLDER_PATH, DRAFT_FOLDER_PATH } from '../../constants';
+
+const { Dakk, Files, DakkUser, Draft } = db.models;
 
 module.exports = {
   plugins: {
@@ -28,19 +30,35 @@ module.exports = {
       dakkFiles: joi
         .array()
         .required()
-        .description('Array of files containing name and path'),
+        .description('Array of files having name and path'),
       
       userName: joi
         .string()
         .max(20)
         .required()
-          .description('Username')
+        .description('Username'),
+
+      branches: joi
+        .array()
+        .required()
+        .description('Assigned Branch Name'),
+
+      draftFiles: joi
+        .array()
+        .optional()
+        .description('Array of draft/reply files having name and path'),
+
+      status: joi
+        .string()
+        .required()
+        .max(5)
+        .description('Status of dakk (Open or Close)')
     },
     options: { abortEarly: false }
   },
 
   handler: async (request, h) => {
-    const { name, userName, dakkFiles } = request.payload;
+    const { name, userName, dakkFiles, branches, draftFiles } = request.payload;
     try {
       const dakk = await Dakk.create({
         name,
@@ -49,8 +67,10 @@ module.exports = {
         status: 'open'
       });
   
+      console.log('dakk', dakk);
+
       const files = dakkFiles.map(f => {
-        const newPath = uploadImages(f.name, f.path);
+        const newPath = uploadImages(f.name, f.path, IMAGES_FOLDER_PATH);
       
         return {
           name: f.name,
@@ -59,7 +79,32 @@ module.exports = {
         }
       });
   
+      const getBranches = branches.map(b => {
+        return {
+          userId: b,
+          dakkId: dakk.id
+        }
+      });
+
       await Files.bulkCreate(files);
+      await DakkUser.bulkCreate(getBranches);
+
+      console.log('draftFiles', draftFiles);
+      if (draftFiles.length > 0) {
+        const drafts = draftFiles.map(f => {
+          const newPath = uploadImages(f.name, f.path, DRAFT_FOLDER_PATH);
+        
+          return {
+            name: f.name,
+            file: newPath,
+            dakkId: dakk.id
+          }
+        });
+
+        console.log('drafts', drafts);
+
+        await Draft.bulkCreate(drafts);
+      }
 
       return h.response(dakk);
     } catch (e) {

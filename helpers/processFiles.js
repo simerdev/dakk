@@ -1,6 +1,5 @@
 import path from 'path';
 import fs from 'fs';
-import { IMAGES_FOLDER_PATH } from '../constants';
 
 function readFile (filePath) {
   return fs.readFileSync(filePath);
@@ -14,11 +13,10 @@ function writeFile (filePath, fileContants) {
   });
 }
 
-function uploadImages (fileName, filePath) {
+function uploadImages (fileName, filePath, folderPath) {
   const rootPath = path.join(path.resolve(__dirname), '../');
   const fileContants = readFile(filePath);
-  const newPath = `${rootPath}${IMAGES_FOLDER_PATH}${fileName}`;
-  console.log('newpath', newPath);
+  const newPath = `${rootPath}${folderPath}${fileName}`;
   writeFile (newPath, fileContants);
   return newPath;
 }

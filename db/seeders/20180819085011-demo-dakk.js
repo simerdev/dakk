@@ -2,10 +2,9 @@
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.bulkInsert('Dakk', [{
+    return queryInterface.bulkInsert('Dakks', [{
       name: 'Dakk Demo',
       type: 'pdf',
-      filePath: 'demoPath',
       status: 'open',
       uploadBy: 'Me',
       createdAt: new Date(),
@@ -14,6 +13,6 @@ module.exports = {
   },
 
   down: (queryInterface, Sequelize) => {
-    return queryInterface.bulkDelete('Dakk', null, {});
+    return queryInterface.bulkDelete('Dakks', null, {});
   }
 };

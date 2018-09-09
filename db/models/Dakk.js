@@ -10,6 +10,8 @@ module.exports = (sequelize, DataTypes) => {
   Dakk.associate = function(models) {
     // associations can be defined here
     Dakk.hasMany(models.Files, {foreignKey: 'id'});
+    Dakk.hasMany(models.Drafts, {foreignKey: 'id'});
+
   };
   return Dakk;
 };
