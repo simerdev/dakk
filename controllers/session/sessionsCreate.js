@@ -59,7 +59,12 @@ module.exports = {
 
         const token = jwt.sign(credentials, JWT_KEY, { algorithm: 'HS256', expiresIn: '1h' });
 
-        return { token };
+        const data = {
+          roleId: user.roleId,
+          token
+        };
+
+        return { data };
       })
       .catch(onError);
   }

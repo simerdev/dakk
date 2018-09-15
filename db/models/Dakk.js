@@ -3,7 +3,6 @@ module.exports = (sequelize, DataTypes) => {
   var Dakk = sequelize.define('Dakk', {
     name: DataTypes.STRING,
     type: DataTypes.STRING,
-    filePath: DataTypes.STRING,
     status: DataTypes.STRING,
     uploadBy: DataTypes.STRING
   }, {});

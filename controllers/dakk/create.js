@@ -4,7 +4,7 @@ import Boom from 'boom';
 import db from '../../db';
 import { IMAGES_FOLDER_PATH, DRAFT_FOLDER_PATH } from '../../constants';
 
-const { Dakk, Files, DakkUser, Draft } = db.models;
+const { Dakk, Files, DakkUser, Draft, User } = db.models;
 
 module.exports = {
   plugins: {
@@ -58,7 +58,7 @@ module.exports = {
   },
 
   handler: async (request, h) => {
-    const { name, userName, dakkFiles, branches, draftFiles } = request.payload;
+    const { name, userName, dakkFiles, branches, draftFiles, userId } = request.payload;
     try {
       const dakk = await Dakk.create({
         name,
@@ -90,13 +90,23 @@ module.exports = {
       await DakkUser.bulkCreate(getBranches);
 
       console.log('draftFiles', draftFiles);
+      const userDetails = await User.findOne({
+        attributes: ['id'],
+        where: {
+          userName
+        }
+      });
+
+      const getUserId = userDetails.id;
+      console.log('getUserId', userDetails);
+
       if (draftFiles.length > 0) {
         const drafts = draftFiles.map(f => {
           const newPath = uploadImages(f.name, f.path, DRAFT_FOLDER_PATH);
         
           return {
-            name: f.name,
-            file: newPath,
+            fileName: f.name,
+            userId: getUserId,
             dakkId: dakk.id
           }
         });

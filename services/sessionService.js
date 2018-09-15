@@ -1,5 +1,4 @@
 import db from '../db';
-
 const { User } = db.models;
 
 exports.authenticate = async (userData) => {

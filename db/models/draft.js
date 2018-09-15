@@ -4,9 +4,7 @@ module.exports = (sequelize, DataTypes) => {
     dakkId: DataTypes.INTEGER,
     fileName: DataTypes.STRING,
     userId: DataTypes.INTEGER
-  }, {
-    timestamps: false
-  });
+  },{});
   
   Draft.associate = function(models) {
     Draft.belongsTo(models.Dakk, { foreignKey: 'dakkId' });

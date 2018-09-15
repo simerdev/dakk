@@ -8,5 +8,10 @@ module.exports = [
     path: '/dakk',
     method: 'POST',
     config: require('./create')
+  },
+  {
+    path: '/dakk/{dakkId}',
+    method: 'GET',
+    config: require('./fetchDetials')
   }
 ]

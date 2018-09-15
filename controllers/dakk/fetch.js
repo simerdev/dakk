@@ -16,7 +16,7 @@ module.exports = {
     try {
       const dakks = await Dakk
       .findAll({
-        attributes: ['name', 'status'],
+        attributes: ['name', 'status', 'id'],
         include: [
           Files
         ]
