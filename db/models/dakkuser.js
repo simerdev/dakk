@@ -1,6 +1,6 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-  var DakkUser = sequelize.define('DakkUser', {
+  var DakkUser = sequelize.define('dakkuser', {
     dakkId: DataTypes.INTEGER,
     userId: DataTypes.INTEGER
   }, {

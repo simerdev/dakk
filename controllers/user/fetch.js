@@ -3,6 +3,8 @@ import db from '../../db';
 const { User } = db.models;
 
 module.exports = {
+  auth: 'jwt',
+
   tags: ['api', 'user'],
 
   description: 'Get All Users',

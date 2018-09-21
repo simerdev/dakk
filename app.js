@@ -1,8 +1,8 @@
 'use strict';
 import Hapi from 'hapi';
-import Boom from 'boom';
+import path from 'path';
+
 import { appHelper }  from './helpers';
-import { JWT_KEY } from './constants';
 
 const server = Hapi.server({
   port: 3000,
@@ -17,14 +17,6 @@ const healthCheck = async () => {
   await appHelper.checkDbConnection();
 };
 
-const validate = function (credentials) {
-  // Run any checks here to confirm we want to grant these credentials access
-  return {
-    isValid: true,
-    credentials // request.auth.credentials
-  }
-};
-
 const init = async () => {
   const swaggerOptions = {
     info: {
@@ -34,14 +26,14 @@ const init = async () => {
     };
     
   await server.register([
-    {
-      plugin: require('./helpers/auth')
-    },
     require('vision'),
     require('inert'),
     {
       plugin: require('hapi-swagger'),
       options: swaggerOptions
+    },
+    {
+      plugin: require('./helpers/auth')
     },
     {
       plugin: require('hapi-router'),
@@ -52,10 +44,15 @@ const init = async () => {
     }
   ]);
 
-  server.auth.strategy('jwt', 'jwt', {
-    key: JWT_KEY,
-    validate,
-    verifyOptions: { algorithms: [ 'HS256' ] }
+  server.route({
+    method: 'GET',
+    path: '/public/{file*}',
+    handler: {
+      directory: {
+        path: path.join(__dirname, './', 'assets'),
+        listing: true
+      }
+    }
   });
 
   server.views({

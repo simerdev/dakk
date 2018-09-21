@@ -13,8 +13,8 @@ const db = new Sequelize(settings.db.database, settings.db.username, settings.db
 
 db.models.Dakk = db.import('./models/Dakk');
 db.models.User = db.import('./models/User');
-db.models.Files = db.import('./models/Files');
-db.models.DakkUser = db.import('./models/DakkUser');
-db.models.Draft = db.import('./models/Draft');
+db.models.Files = db.import('./models/files');
+db.models.DakkUser = db.import('./models/dakkuser');
+db.models.Draft = db.import('./models/draft');
 
 module.exports = db;

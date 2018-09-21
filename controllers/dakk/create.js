@@ -7,6 +7,8 @@ import { IMAGES_FOLDER_PATH, DRAFT_FOLDER_PATH } from '../../constants';
 const { Dakk, Files, DakkUser, Draft, User } = db.models;
 
 module.exports = {
+  auth: 'jwt',
+  
   plugins: {
     'hapi-swagger': {
       payloadType: 'form'
@@ -52,19 +54,26 @@ module.exports = {
         .string()
         .required()
         .max(5)
-        .description('Status of dakk (Open or Close)')
+        .description('Status of dakk (Open or Close)'),
+
+      speakOn: joi
+        .boolean()
+        .default(0)
+        .optional()
+        .description('Required to speak on ?')
     },
     options: { abortEarly: false }
   },
 
   handler: async (request, h) => {
-    const { name, userName, dakkFiles, branches, draftFiles, userId } = request.payload;
+    const { name, userName, dakkFiles, branches, draftFiles, speakOn } = request.payload;
     try {
       const dakk = await Dakk.create({
         name,
         type: 'pdf',
         uploadBy: userName,
-        status: 'open'
+        status: 'open',
+        speakOn
       });
   
       console.log('dakk', dakk);

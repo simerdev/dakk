@@ -1,14 +1,15 @@
 import joi from 'joi';
 import Boom from 'boom';
 import db from '../../db';
-const { Dakk, Files, Draft } = db.models;
-Dakk.hasMany(Files, {foreignKey: 'id'});
-Files.belongsTo(Dakk, { foreignKey: 'dakkId' });
+const { Dakk, Files, Draft, DakkUser } = db.models;
 
-Dakk.hasMany(Draft, {foreignKey: 'id'});
-Draft.belongsTo(Dakk, { foreignKey: 'dakkId' });
+Dakk.hasMany(Files, {foreignKey: 'dakkId'});
+Dakk.hasMany(Draft, {foreignKey: 'dakkId'});
+Dakk.hasMany(DakkUser, {foreignKey: 'dakkId'});
 
 module.exports = {
+  auth: 'jwt',
+
   tags: ['api', 'dakk'],
 
   description: 'Get Dakk Detials',
@@ -30,12 +31,14 @@ module.exports = {
     try {
       const dakks = await Dakk
       .findOne({
+        attributes: ['status', 'speakOn', 'name'],
         where: {
           id: dakkId
         },
         include: [
-          Files,
-          Draft
+          { model: Files, required: false, attributes: ['name'] },
+          { model: Draft, required: false, attributes: [['fileName', 'name']] },
+          { model: DakkUser, required: false, attributes: ['userId'] },
         ]
       });
 

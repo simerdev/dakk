@@ -1,4 +1,5 @@
 import { JWT_KEY } from '../../constants';
+import { generatePass, comparePass } from '../../helpers/hashPassword';
 
 const joi = require('joi');
 const sessionService = require('../../services/sessionService');
@@ -41,26 +42,30 @@ module.exports = {
 
     return sessionService
       .authenticate(payload)
-      .then(user => {
+      .then(async res => {
+        const user = res && res.dataValues;
         // check if user exists
         if (!user) {
           return boom.unauthorized('User does not exists');
         };
 
+        const match = await comparePass(payload.password, user.password);
         // compare pwd
-        if (payload.password !== user.password) {
+        if (!match) {
           return boom.badRequest('Invalid Password');
         }
 
         const credentials = {
-          userName: user.username,
-          password: user.password
+          userName: user.userName,
+          password: user.password,
+          roleId: user.roleId
         };
 
         const token = jwt.sign(credentials, JWT_KEY, { algorithm: 'HS256', expiresIn: '1h' });
 
         const data = {
           roleId: user.roleId,
+          userId: user.id,
           token
         };
 
