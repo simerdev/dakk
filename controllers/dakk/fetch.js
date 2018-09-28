@@ -1,4 +1,3 @@
-import joi from 'joi';
 import Boom from 'boom';
 import db from '../../db';
 const { Dakk, Files } = db.models;
@@ -7,6 +6,13 @@ Dakk.hasMany(Files, {foreignKey: 'id'});
 Files.belongsTo(Dakk, { foreignKey: 'dakkId' });
 
 module.exports = {
+  /* plugins: {
+    'hapi-socket.io': {
+      event: 'getUser',
+      emit: internals.emitUser
+    },
+  }, */
+
   tags: ['api', 'dakk'],
 
   description: 'Get All Dakks',
@@ -28,5 +34,6 @@ module.exports = {
       console.log(e);
       Boom.badRequest('invalid query');
     }
-  }
+  },
 };
+

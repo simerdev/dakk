@@ -1,7 +1,6 @@
 'use strict';
 import Hapi from 'hapi';
 import path from 'path';
-
 import { appHelper }  from './helpers';
 
 const server = Hapi.server({
@@ -9,9 +8,7 @@ const server = Hapi.server({
   host: 'localhost'
 });
 
-const context = {
-  title: 'My personal site'
-};
+const io = require('socket.io')(server.listener);
 
 const healthCheck = async () => {
   await appHelper.checkDbConnection();
@@ -28,6 +25,8 @@ const init = async () => {
   await server.register([
     require('vision'),
     require('inert'),
+    // require('hapi-socket.io'),
+    // require('hapi-io'),
     {
       plugin: require('hapi-swagger'),
       options: swaggerOptions
@@ -55,28 +54,26 @@ const init = async () => {
     }
   });
 
-  server.views({
-    engines: {
-      html: require('handlebars')
-    },
-    relativeTo: __dirname,
-    path: './views',
-    layout: 'default-layout',
-    helpersPath: './views/helpers',
-    context
-  });
-
-  server.route({
-    method: 'GET',
-    path: '/login',
-    handler: (request, h) => {
-      return h.view('index')
-    }
-  });
-
   await healthCheck();
 
   await server.start();
+
+  io.on('connection', function (socket) {
+    console.log('socket connection');
+
+    socket.on('addDakk', function (payload) {
+      console.log('socket add Dakk called', payload);
+      payload.message = `New Dakk ${payload.dakkName} is assigned to you`;
+      io.emit('notification', payload);
+    });
+
+    socket.on('addDraft', function (payload) {
+      console.log('socket add Draft called');
+      payload.message = `New Draft on Dakk ${payload.dakkName}`;
+      io.emit('notification', payload);
+    });
+
+  });
 
   console.log(`Server running at: ${server.info.uri}`);
 };

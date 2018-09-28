@@ -21,7 +21,9 @@
     "hapi-auth-cookie": "^9.0.0",
     "hapi-auth-jwt2": "^8.0.0",
     "hapi-geo-locate": "^3.0.1",
+    "hapi-io": "^0.2.1",
     "hapi-router": "^4.0.0",
+    "hapi-socket.io": "0.0.8",
     "hapi-swagger": "^9.1.1",
     "inert": "^5.1.0",
     "joi": "^13.5.2",
@@ -29,6 +31,7 @@
     "mysql2": "^1.6.1",
     "sequelize": "^4.38.0",
     "sequelize-cli": "^4.1.1",
+    "socket.io": "^2.1.1",
     "vision": "^5.3.3"
   },
   "devDependencies": {
