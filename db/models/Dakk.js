@@ -4,7 +4,8 @@ module.exports = (sequelize, DataTypes) => {
     name: DataTypes.STRING,
     type: DataTypes.STRING,
     status: DataTypes.STRING,
-    uploadBy: DataTypes.STRING
+    uploadBy: DataTypes.STRING,
+    speakOn: DataTypes.BOOLEAN
   }, {});
   Dakk.associate = function(models) {
     // associations can be defined here

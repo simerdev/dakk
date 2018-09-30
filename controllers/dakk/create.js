@@ -109,7 +109,7 @@ module.exports = {
       const getUserId = userDetails.id;
       console.log('getUserId', userDetails);
 
-      if (draftFiles.length > 0) {
+      if (draftFiles && draftFiles.length > 0) {
         const drafts = draftFiles.map(f => {
           const newPath = uploadImages(f.name, f.path, DRAFT_FOLDER_PATH);
         
