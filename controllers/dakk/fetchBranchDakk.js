@@ -36,7 +36,7 @@ module.exports = {
 
       const dakks = await Dakk
         .findAll({
-          attributes: ['name', 'status', 'id', 'createdAt', 'updatedAt'],
+          attributes: ['name', 'status', 'id', 'speakOn', 'createdAt', 'updatedAt'],
           where: {
             id: {
               $in: dakkIds

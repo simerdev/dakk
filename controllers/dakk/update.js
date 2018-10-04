@@ -26,7 +26,6 @@ module.exports = {
       dakkId: joi
         .number()
         .required()
-        .max(10)
         .description('Dakk id to update'),
 
       userName: joi
@@ -38,7 +37,7 @@ module.exports = {
       name: joi
         .string()
         .max(50)
-        .required()
+        .optional()
         .description('Name of dakk'),
       
       dakkFiles: joi
@@ -66,6 +65,7 @@ module.exports = {
         .boolean()
         .default(0)
         .optional()
+        .allow([true, false])
         .description('Required to speak on ?')
     },
     options: { abortEarly: false }
@@ -81,7 +81,7 @@ module.exports = {
       const dakk = await Dakk.update({
         name,
         status: status,
-        speakOn: speakOn ? 1 : 0
+        speakOn: speakOn
       }, {
         where: {
           id: dakkId
@@ -139,7 +139,7 @@ module.exports = {
             return {
               fileName: f.name,
               userId: getUserId,
-              dakkId: dakk.id
+              dakkId: dakkId
             }
           });
   
