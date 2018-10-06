@@ -4,7 +4,7 @@ import path from 'path';
 import { appHelper }  from './helpers';
 
 const server = Hapi.server({
-  port: 3000,
+  port: process.env.PORT || 3000,
   host: 'localhost'
 });
 
