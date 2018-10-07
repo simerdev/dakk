@@ -1,0 +1,10 @@
+{
+  "name": "Dakk System",
+  "description": "This app sends dakks.",
+  "keywords": [
+    "dakk",
+    "react",
+    "redux"
+  ],
+  "repository": "https://github.com/simerdev/dakk"
+}

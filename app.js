@@ -4,8 +4,7 @@ import path from 'path';
 import { appHelper }  from './helpers';
 
 const server = Hapi.server({
-  port: process.env.PORT || 3000,
-  host: 'localhost'
+  port: process.env.PORT || 3000
 });
 
 const io = require('socket.io')(server.listener);
