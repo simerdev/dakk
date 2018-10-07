@@ -15,7 +15,10 @@ module.exports = {
     try {
       const users = await User
       .findAll({
-        attributes: ['userName', 'id']
+        attributes: ['userName', 'id'],
+        where: {
+          roleId: 2
+        }
       });
 
       return h.response(users);
