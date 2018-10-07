@@ -38,5 +38,8 @@
     "babel-preset-env": "^1.7.0",
     "babel-register": "^6.26.0",
     "nodemon": "^1.18.3"
+  },
+  "engines": {
+    "node": "8.11.3"
   }
 }
