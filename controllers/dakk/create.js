@@ -4,7 +4,7 @@ import Boom from 'boom';
 import db from '../../db';
 import { IMAGES_FOLDER_PATH, DRAFT_FOLDER_PATH } from '../../constants';
 
-const { Dakk, Files, DakkUser, Draft, User } = db.models;
+const { Dakk, Files, DakkUser, Draft, User, Comments } = db.models;
 
 module.exports = {
   auth: 'jwt',
@@ -60,13 +60,17 @@ module.exports = {
         .boolean()
         .default(0)
         .optional()
-        .description('Required to speak on ?')
+        .description('Required to speak on ?'),
+
+      comment: joi
+        .optional()
+        .description('Comments')
     },
     options: { abortEarly: false }
   },
 
   handler: async (request, h) => {
-    const { name, userName, dakkFiles, branches, draftFiles, speakOn } = request.payload;
+    const { name, userName, dakkFiles, branches, draftFiles, speakOn, comment } = request.payload;
     try {
       const dakk = await Dakk.create({
         name,
@@ -123,6 +127,14 @@ module.exports = {
         console.log('drafts', drafts);
 
         await Draft.bulkCreate(drafts);
+      }
+
+      if (comment !== null && comment !== '' && comment !== undefined) {
+        await Comments.create({
+          userId: getUserId,
+          dakkId: dakk.id,
+          comment
+        });
       }
 
       return h.response(dakk);

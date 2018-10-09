@@ -7,6 +7,8 @@ Dakk.hasMany(Files, {foreignKey: 'dakkId'});
 Files.belongsTo(Dakk, { foreignKey: 'dakkId' });
 
 module.exports = {
+  auth: 'jwt',
+  
   tags: ['api', 'dakk', 'branch'],
 
   description: 'Get All Dakks of Particular Branch',
@@ -19,11 +21,23 @@ module.exports = {
         .number()
         .required()
         .description('Branch Id')
+    },
+    query: {
+      page: joi
+        .number()
+        .default(1)
+        .description('Page No.'),
+
+      offset: joi
+        .number()
+        .default(10)
+        .description('Offset number')
     }
   },
 
   handler: async (request, h) => {
     const { branchId } = request.params;
+    const {page, offset} = request.query;
 
     try {
       const findDakks = await DakkUser.findAll({
@@ -31,7 +45,7 @@ module.exports = {
           userId: branchId
         }
       });
-
+      
       const dakkIds = findDakks.map(d => d.dakkId);
 
       const dakks = await Dakk
@@ -45,10 +59,23 @@ module.exports = {
           include: [
             Files
           ],
+          offset: page === 0 ? 0 : (page * offset),
+          limit: offset,
           order: [['createdAt', 'DESC']],
         });
 
-      return h.response(dakks);
+        const count = await Dakk.count({
+          where: {
+            id: {
+              $in: dakkIds
+            }
+          }
+        });
+                
+      return h.response({
+        rows: dakks,
+        count
+      });
     } catch (e) {
       console.log(e);
       Boom.badRequest('invalid query');

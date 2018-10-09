@@ -16,5 +16,6 @@ db.models.User = db.import('./models/User');
 db.models.Files = db.import('./models/files');
 db.models.DakkUser = db.import('./models/dakkuser');
 db.models.Draft = db.import('./models/draft');
+db.models.Comments = db.import('./models/comments');
 
 module.exports = db;

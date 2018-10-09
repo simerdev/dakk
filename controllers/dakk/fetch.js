@@ -8,6 +8,8 @@ Dakk.hasMany(Files, {foreignKey: 'id'});
 Files.belongsTo(Dakk, { foreignKey: 'dakkId' });
 
 module.exports = {
+  auth: 'jwt',
+  
   tags: ['api', 'dakk'],
 
   description: 'Get All Dakks',
@@ -33,16 +35,21 @@ module.exports = {
 
     try {
       const dakks = await Dakk
-      .findAndCountAll({
+      .findAll({
         attributes: ['name', 'status', 'id'],
         include: [
           Files
         ],
-        offset: page === 0 ? 1 : (page * offset) + 1,
+        offset: page === 0 ? 0 : (page * offset),
         limit: offset,
       });
 
-      return h.response(dakks);
+      const count = await Dakk.count();
+
+      return h.response({
+        rows: dakks,
+        count
+      });
     } catch (e) {
       console.log(e);
       Boom.badRequest('invalid query');

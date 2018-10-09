@@ -4,7 +4,7 @@ import Boom from 'boom';
 import db from '../../db';
 import { IMAGES_FOLDER_PATH, DRAFT_FOLDER_PATH } from '../../constants';
 
-const { Dakk, Files, DakkUser, Draft, User } = db.models;
+const { Dakk, Files, DakkUser, Draft, User, Comments } = db.models;
 
 module.exports = {
   auth: 'jwt',
@@ -66,16 +66,18 @@ module.exports = {
         .default(0)
         .optional()
         .allow([true, false])
-        .description('Required to speak on ?')
+        .description('Required to speak on ?'),
+
+      comment: joi
+        .optional()
+        .description('Comments')
     },
     options: { abortEarly: false }
   },
 
   handler: async (request, h) => {
-    const { name, dakkFiles, branches, draftFiles, status, speakOn } = request.payload;
+    const { name, dakkFiles, branches, draftFiles, status, speakOn, comment } = request.payload;
     const { dakkId, userName } = request.params;
-
-    console.log('speakon', speakOn);
     
     try {
       const dakk = await Dakk.update({
@@ -122,6 +124,7 @@ module.exports = {
   
         await DakkUser.bulkCreate(getBranches);
       }
+
       const userDetails = await User.findOne({
         attributes: ['id'],
         where: {
@@ -149,6 +152,14 @@ module.exports = {
         }
       }
       
+      if (comment !== null && comment !== '' && comment !== undefined) {
+        await Comments.create({
+          userId: getUserId,
+          dakkId: dakkId,
+          comment
+        });
+      }
+
       return h.response(dakk);
     } catch (e) {
       Boom.badRequest('Error while creating dakk', e);

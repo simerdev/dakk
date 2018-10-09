@@ -25,8 +25,6 @@ const init = async () => {
   await server.register([
     require('vision'),
     require('inert'),
-    // require('hapi-socket.io'),
-    // require('hapi-io'),
     {
       plugin: require('hapi-swagger'),
       options: swaggerOptions
@@ -73,6 +71,11 @@ const init = async () => {
       io.emit('notification', payload);
     });
 
+    socket.on('addComment', function (payload) {
+      console.log('socket add comment called');
+      payload.message = `New Comment Added on Dakk ${payload.dakkName}`;
+      io.emit('notification', payload);
+    });
   });
 
   console.log(`Server running at: ${server.info.uri}`);
