@@ -58,7 +58,9 @@ const init = async () => {
 
   io.on('connection', function (socket) {
     console.log('socket connection');
-
+    var clients = socket.client.conn.emit.length;
+    console.log("clients: " + clients);
+    
     socket.on('addDakk', function (payload) {
       console.log('socket add Dakk called', payload);
       payload.message = `New Dakk ${payload.dakkName} is assigned to you`;

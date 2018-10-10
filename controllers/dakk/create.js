@@ -83,11 +83,11 @@ module.exports = {
       console.log('dakk', dakk);
 
       const files = dakkFiles.map(f => {
-        const newPath = uploadImages(f.name, f.path, IMAGES_FOLDER_PATH);
+        // const newPath = uploadImages(f.name, f.path, IMAGES_FOLDER_PATH);
       
         return {
           name: f.name,
-          file: newPath,
+          file: '',
           dakkId: dakk.id
         }
       });
@@ -115,7 +115,7 @@ module.exports = {
 
       if (draftFiles && draftFiles.length > 0) {
         const drafts = draftFiles.map(f => {
-          const newPath = uploadImages(f.name, f.path, DRAFT_FOLDER_PATH);
+          // const newPath = uploadImages(f.name, f.path, DRAFT_FOLDER_PATH);
         
           return {
             fileName: f.name,

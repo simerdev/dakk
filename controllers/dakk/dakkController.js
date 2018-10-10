@@ -23,5 +23,5 @@ module.exports = [
     path: '/branch/dakk/{branchId}',
     method: 'GET',
     config: require('./fetchBranchDakk')
-  },
+  }
 ]

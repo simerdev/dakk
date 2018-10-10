@@ -4,6 +4,8 @@ import db from '../../db';
 const { Draft, User } = db.models;
 
 module.exports = {
+  auth: 'jwt',
+  
   tags: ['api', 'dakk'],
 
   description: 'Get All Drafts Associated to user',
@@ -59,17 +61,24 @@ module.exports = {
             where: condition
           });
 
-          const draftList = await Promise.all(drafts.map(async d => {
-            const user = await User.findOne({
-              attributes: ['userName'],
-              where: {
-                id: d.userId
+          const userIds = drafts.map(d => d.userId);
+          const userNamesArray = await User.findAll({
+            attributes: ['userName', 'id'],
+            where: {
+              id: {
+                $in: userIds
               }
-            });
+            }
+          });
 
-            d.dataValues.replyBy = user.userName;
+          const draftList = drafts.map(d => {
+            const usr = userNamesArray.map(u => u.toJSON()).find(u => u.id === d.userId);
+            if (usr) {
+              d.dataValues.replyBy = usr.userName;
+            }
+
             return d;
-          }));
+          });
       
         return h.response(draftList);
       }

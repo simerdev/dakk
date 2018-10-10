@@ -45,17 +45,24 @@ module.exports = {
       });
 
       if (dakks.dataValues.comments.length > 0) {
-        const comments = await Promise.all(dakks.dataValues.comments.map(async d => {
-          const user = await User.findOne({
-            attributes: ['userName'],
+        const userIds = dakks.dataValues.comments.map(d => d.userId);
+          const userNamesArray = await User.findAll({
+            attributes: ['userName', 'id'],
             where: {
-              id: d.userId
+              id: {
+                $in: userIds
+              }
             }
           });
 
-          d.dataValues.name = user.userName;
-          return d;
-        }));
+          const comments = dakks.dataValues.comments.map(d => {
+            const usr = userNamesArray.map(u => u.toJSON()).find(u => u.id === d.userId);
+            if (usr) {
+              d.dataValues.name = usr.userName;
+            }
+
+            return d;
+          });
 
         delete dakks.dataValues.comments;
         dakks.dataValues.comments = comments;
