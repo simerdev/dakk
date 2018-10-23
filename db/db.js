@@ -17,5 +17,6 @@ db.models.Files = db.import('./models/files');
 db.models.DakkUser = db.import('./models/dakkuser');
 db.models.Draft = db.import('./models/draft');
 db.models.Comments = db.import('./models/comments');
+db.models.SpeakOn = db.import('./models/speakon');
 
 module.exports = db;

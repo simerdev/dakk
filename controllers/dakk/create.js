@@ -4,7 +4,7 @@ import Boom from 'boom';
 import db from '../../db';
 import { IMAGES_FOLDER_PATH, DRAFT_FOLDER_PATH } from '../../constants';
 
-const { Dakk, Files, DakkUser, Draft, User, Comments } = db.models;
+const { Dakk, Files, DakkUser, Draft, User, Comments, SpeakOn } = db.models;
 
 module.exports = {
   auth: 'jwt',
@@ -82,6 +82,17 @@ module.exports = {
   
       console.log('dakk', dakk);
 
+      /* 
+        Added Speak On time
+      */
+      await SpeakOn.create({
+        dakkId: dakk.id
+      });
+
+      /* 
+        Add Files entries
+      */
+
       const files = dakkFiles.map(f => {
         // const newPath = uploadImages(f.name, f.path, IMAGES_FOLDER_PATH);
       
@@ -92,6 +103,10 @@ module.exports = {
         }
       });
   
+      /* 
+        Assign Dakk to Branches
+      */
+
       const getBranches = branches.map(b => {
         return {
           userId: b,
@@ -113,6 +128,10 @@ module.exports = {
       const getUserId = userDetails.id;
       console.log('getUserId', userDetails);
 
+      /* 
+        Add Dakk Drafts
+      */
+
       if (draftFiles && draftFiles.length > 0) {
         const drafts = draftFiles.map(f => {
           // const newPath = uploadImages(f.name, f.path, DRAFT_FOLDER_PATH);
@@ -129,6 +148,9 @@ module.exports = {
         await Draft.bulkCreate(drafts);
       }
 
+      /* 
+        Add Comments for Dakk
+      */
       if (comment !== null && comment !== '' && comment !== undefined) {
         await Comments.create({
           userId: getUserId,

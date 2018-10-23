@@ -7,7 +7,7 @@ function readFile (filePath) {
 
 function writeFile (filePath, fileContants) {
   var stream = fs.createWriteStream(filePath);
-  stream.once('open', function(fd) {
+  stream.once('open', (fd) => {
     stream.write(fileContants);
     stream.end();
   });

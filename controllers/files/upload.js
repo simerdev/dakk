@@ -12,6 +12,10 @@ module.exports = {
 
   notes: 'upload files',
 
+  payload: {
+    maxBytes: 1000 * 1000 * 20, // 20 Mb
+  },
+
   validate: {
     payload: {
       file: joi
@@ -44,4 +48,3 @@ module.exports = {
     }
   },
 };
-

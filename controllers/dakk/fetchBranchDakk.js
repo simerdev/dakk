@@ -1,9 +1,10 @@
 import joi from 'joi';
 import Boom from 'boom';
 import db from '../../db';
-const { Dakk, Files, DakkUser } = db.models;
+const { Dakk, Files, DakkUser, SpeakOn } = db.models;
 
 Dakk.hasMany(Files, {foreignKey: 'dakkId'});
+Dakk.hasOne(SpeakOn, {foreignKey: 'dakkId'});
 Files.belongsTo(Dakk, { foreignKey: 'dakkId' });
 
 module.exports = {
@@ -57,7 +58,8 @@ module.exports = {
             }
           },
           include: [
-            Files
+            { model: Files, required: false },
+            { model: SpeakOn, required: false, attributes: ['updatedAt'] },
           ],
           offset: page === 0 ? 0 : (page * offset),
           limit: offset,

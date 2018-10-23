@@ -4,7 +4,7 @@ import Boom from 'boom';
 import db from '../../db';
 import { IMAGES_FOLDER_PATH, DRAFT_FOLDER_PATH } from '../../constants';
 
-const { Dakk, Files, DakkUser, Draft, User, Comments } = db.models;
+const { Dakk, Files, DakkUser, Draft, User, Comments, SpeakOn } = db.models;
 
 module.exports = {
   auth: 'jwt',
@@ -91,6 +91,17 @@ module.exports = {
       });
   
       console.log('dakk', dakk);
+
+      /* 
+        Update Speak On time
+      */
+      await SpeakOn.update({
+        updatedAt: new Date()
+      }, {
+        where: {
+          dakkId
+        }
+      });
 
       if (dakkFiles) {
         if(dakkFiles.length > 0) {

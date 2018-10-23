@@ -1,12 +1,13 @@
 import joi from 'joi';
 import Boom from 'boom';
 import db from '../../db';
-const { Dakk, Files, Draft, DakkUser, Comments, User } = db.models;
+const { Dakk, Files, Draft, DakkUser, Comments, User, SpeakOn } = db.models;
 
 Dakk.hasMany(Files, {foreignKey: 'dakkId'});
 Dakk.hasMany(Draft, {foreignKey: 'dakkId'});
 Dakk.hasMany(DakkUser, {foreignKey: 'dakkId'});
 Dakk.hasMany(Comments, {foreignKey: 'dakkId'});
+Dakk.hasOne(SpeakOn, {foreignKey: 'dakkId'});
 
 module.exports = {
   auth: 'jwt',
@@ -40,7 +41,8 @@ module.exports = {
           { model: Files, required: false, attributes: ['name'] },
           { model: Draft, required: false, attributes: [['fileName', 'name']] },
           { model: DakkUser, required: false, attributes: ['userId'] },
-          { model: Comments, required: false, attributes: ['id', 'userId', 'comment', 'createdAt'] }
+          { model: Comments, required: false, attributes: ['id', 'userId', 'comment', 'createdAt'] },
+          { model: SpeakOn, required: false, attributes: ['updatedAt'] }
         ]
       });
 
