@@ -2,6 +2,7 @@
 import Hapi from 'hapi';
 import path from 'path';
 import { appHelper }  from './helpers';
+import { addNotification } from './db/repositries/notification';
 
 const server = Hapi.server({
   port: process.env.PORT || 3000,
@@ -78,7 +79,18 @@ const init = async () => {
       payload.message = `New Comment Added on Dakk ${payload.dakkName}`;
       io.emit('notification', payload);
     });
-  });
+
+    socket.on('end', function () {
+      console.log('conenct disconnected');
+      socket.disconnect(true);
+      // socket.connected[socket.id].disconnect();
+
+      var clients = socket.client.conn.emit.length;
+      setTimeout(function() {
+        console.log("clients: " + clients);
+      }, 5000);
+    });
+  }); 
 
   console.log(`Server running at: ${server.info.uri}`);
 };

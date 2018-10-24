@@ -3,6 +3,7 @@ import { uploadImages } from '../../helpers/processFiles';
 import Boom from 'boom';
 import db from '../../db';
 import { IMAGES_FOLDER_PATH, DRAFT_FOLDER_PATH } from '../../constants';
+import { addNotification } from '../../db/repositries/notification';
 
 const { Dakk, Files, DakkUser, Draft, User, Comments, SpeakOn } = db.models;
 
@@ -137,19 +138,18 @@ module.exports = {
       }
 
       const userDetails = await User.findOne({
-        attributes: ['id'],
+        attributes: ['id', 'adminId'],
         where: {
           userName
         }
       });
 
       const getUserId = userDetails.id;
+      const getAdminId = userDetails.adminId;
 
       if (draftFiles) {
         if (draftFiles.length > 0) {
           const drafts = draftFiles.map(f => {
-            const newPath = uploadImages(f.name, f.path, DRAFT_FOLDER_PATH);
-          
             return {
               fileName: f.name,
               userId: getUserId,
@@ -157,6 +157,19 @@ module.exports = {
             }
           });
   
+          if (getAdminId !== 0) {
+            await addNotification({
+              assignedTo: branches,
+              message: `New Draft on Dakk ${name}`
+            });
+          } else {
+            await addNotification({
+              assignedTo: [getAdminId],
+              message: `New Draft on Dakk ${name}`
+            });
+          }
+          
+
           console.log('drafts', drafts);
   
           await Draft.bulkCreate(drafts);
@@ -169,6 +182,20 @@ module.exports = {
           dakkId: dakkId,
           comment
         });
+
+        if (getAdminId === 0) {
+          await addNotification({
+            assignedTo: branches,
+            message: `New Comment on Dakk ${name}`
+          });
+        } else {
+          console.log('getAdminId', getAdminId);
+
+          await addNotification({
+            assignedTo: [getAdminId],
+            message: `New Comment on Dakk ${name}`
+          });
+        }
       }
 
       return h.response(dakk);

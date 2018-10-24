@@ -17,6 +17,8 @@ async function register (server, options) {
 }
 
 const validate = async function (credentials, h) {
+  console.log('validating');
+  
   const unauthorized = (err) => {
     console.log('err', err);
     console.log('h', h);

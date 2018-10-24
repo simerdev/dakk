@@ -8,6 +8,6 @@ exports.checkDbConnection = () => new Promise((resolve, reject) => {
   })
   .catch(err => {
     console.error('Unable to connect to the database:', err);
-    reeject();
+    reject();
   });
 });

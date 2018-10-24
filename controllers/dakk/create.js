@@ -3,6 +3,7 @@ import { uploadImages } from '../../helpers/processFiles';
 import Boom from 'boom';
 import db from '../../db';
 import { IMAGES_FOLDER_PATH, DRAFT_FOLDER_PATH } from '../../constants';
+import { addNotification } from '../../db/repositries/notification';
 
 const { Dakk, Files, DakkUser, Draft, User, Comments, SpeakOn } = db.models;
 
@@ -158,6 +159,14 @@ module.exports = {
           comment
         });
       }
+
+    /* 
+      Add Notification
+    */
+    await addNotification({
+      assignedTo: branches,
+      message: `New Dakk ${dakk.name} is assigned to you`
+    });
 
       return h.response(dakk);
     } catch (e) {

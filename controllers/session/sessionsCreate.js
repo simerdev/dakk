@@ -1,5 +1,5 @@
 import { JWT_KEY } from '../../constants';
-import { generatePass, comparePass } from '../../helpers/hashPassword';
+import { comparePass } from '../../helpers/hashPassword';
 
 const joi = require('joi');
 const sessionService = require('../../services/sessionService');
@@ -66,6 +66,7 @@ module.exports = {
         const data = {
           roleId: user.roleId,
           userId: user.id,
+          adminId: user.adminId,
           token
         };
 
